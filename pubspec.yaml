@@ -1,0 +1,25 @@
+name: flutter_screen_recorder_ffmpeg
+description: A new Flutter project.
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  image: ^3.0.2
+  path_provider: ^2.0.8
+  ffmpeg_kit_flutter_min_gpl: ^4.5.1
+  permission_handler: ^8.1.4+2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+
+flutter:
+
