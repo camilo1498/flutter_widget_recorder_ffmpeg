@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screen_recorder_ffmpeg/screen_recorder.dart';
-import 'package:flutter_screen_recorder_ffmpeg/src/constants.dart';
 import 'dart:ui' as ui show Image, ImageByteFormat;
 
 import 'package:path_provider/path_provider.dart';
