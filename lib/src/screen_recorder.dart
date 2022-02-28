@@ -19,15 +19,17 @@ class ScreenRecorderController {
 
   /// key of the content widget to render
   final GlobalKey _containerKey;
+
   /// frame callback
   final SchedulerBinding _binding;
+
   /// save frames
   final List<ui.Image> _frames = [];
 
   /// is recording frames
   bool _record = false;
 
-
+  /// start render
   void start() {
     /// only start a video, if no recording is in progress
     if (_record == true) {
@@ -37,10 +39,12 @@ class ScreenRecorderController {
     _binding.addPostFrameCallback(postFrameCallback);
   }
 
+  /// stop render
   void stop() {
     _record = false;
   }
 
+  /// add frame to list
   void postFrameCallback(Duration timestamp) async {
     if (_record == false) {
       return;
@@ -59,6 +63,7 @@ class ScreenRecorderController {
     _binding.addPostFrameCallback(postFrameCallback);
   }
 
+  /// capture widget to render
   Future<ui.Image?> capture() async {
     final renderObject = _containerKey.currentContext?.findRenderObject();
 
@@ -71,6 +76,7 @@ class ScreenRecorderController {
     return null;
   }
 
+  /// error details
   FlutterErrorDetails _noRenderObject() {
     return FlutterErrorDetails(
       exception: Exception(
@@ -84,14 +90,18 @@ class ScreenRecorderController {
     );
   }
 
-  Future<String> export() async {
+  /// export widget
+  Future<String> export({required RenderType renderType}) async {
     String dir;
     String imagePath;
+
     /// get application temp directory
     Directory appDocDirectory = await getTemporaryDirectory();
     dir = appDocDirectory.path;
+
     /// delete last directory
     appDocDirectory.deleteSync(recursive: true);
+
     /// create new directory
     appDocDirectory.create();
 
@@ -99,22 +109,32 @@ class ScreenRecorderController {
     for (int i = 0; i < _frames.length; i++) {
       /// convert frame to byte data png
       final val = await _frames[i].toByteData(format: ui.ImageByteFormat.png);
+
       /// convert frame to buffer list
       Uint8List pngBytes = val!.buffer.asUint8List();
+
       /// create temp path for every frame
       imagePath = '$dir/$i.png';
+
       /// create image frame in the temp directory
       File capturedFile = File(imagePath);
       await capturedFile.writeAsBytes(pngBytes);
     }
+
     /// clear frame list
     _frames.clear();
-    /// render frames.png to video/gif
-    await FfmpegProvider().mergeIntoVideo(renderType: RenderType.video);
-    /// return
-    return Constants.videoOutputPath;
-  }
 
+    /// render frames.png to video/gif
+    var response =
+        await FfmpegProvider().mergeIntoVideo(renderType: renderType);
+
+    /// return
+    if (response['success'] == true) {
+      return Constants.videoOutputPath;
+    } else {
+      return response['msg'];
+    }
+  }
 }
 
 class ScreenRecorder extends StatelessWidget {
@@ -122,7 +142,7 @@ class ScreenRecorder extends StatelessWidget {
     Key? key,
     required this.child,
     required this.controller,
-  })  : super(key: key);
+  }) : super(key: key);
 
   /// The child which should be recorded.
   final Widget child;
@@ -138,4 +158,3 @@ class ScreenRecorder extends StatelessWidget {
     );
   }
 }
-

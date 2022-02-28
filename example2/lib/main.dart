@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_recorder_ffmpeg/screen_recorder.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -47,7 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  late Timer _timer;
   int _timerStart = 5;
   recordWidget() async {
     controller.start();
@@ -56,27 +54,28 @@ class _MyHomePageState extends State<MyHomePage> {
       _showDialog = true;
     });
   }
-  void startTimer() {
 
+  void startTimer() {
     Duration oneSec = const Duration(seconds: 1);
-    _timer = Timer.periodic(
+    Timer.periodic(
       oneSec,
-          (Timer timer) async{
+      (Timer timer) async {
         if (_timerStart == 0) {
           setState(() {
             controller.stop();
 
             timer.cancel();
           });
-          String path = await controller.export();
+          String path = await controller.export(renderType: RenderType.video);
           setState(() {
             outPath = path;
           });
           await ImageGallerySaver.saveFile(outPath,
-              name: "stories_creator${DateTime.now()}.png").whenComplete(() {
-                setState(() {
-                  _showDialog = false;
-                });
+                  name: "stories_creator${DateTime.now()}.png")
+              .whenComplete(() {
+            setState(() {
+              _showDialog = false;
+            });
           });
         } else {
           setState(() {
@@ -96,77 +95,75 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-
                 ScreenRecorder(
                   controller: controller,
                   child: Center(
-                    child: AnimatedContainer(
-                      height: 200,
-                      width: 200,
-                      duration: const Duration(milliseconds: 300),
-                      color: colors,
-                      child: Center(
-                        child: AnimatedTextKit(
-                          repeatForever: true,
-                          animatedTexts: [
-                            TyperAnimatedText('aaaaaa', speed: const Duration(milliseconds: 300))
-                          ],
-                        ),
+                      child: AnimatedContainer(
+                    height: 200,
+                    width: 200,
+                    duration: const Duration(milliseconds: 300),
+                    color: colors,
+                    child: Center(
+                      child: AnimatedTextKit(
+                        repeatForever: true,
+                        animatedTexts: [
+                          TyperAnimatedText('aaaaaa',
+                              speed: const Duration(milliseconds: 300))
+                        ],
                       ),
-                    )
+                    ),
+                  )),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      _colorPalette(
+                          color: Colors.red,
+                          onTap: () {
+                            setState(() {
+                              colors = Colors.red;
+                            });
+                          }),
+                      _colorPalette(
+                          color: Colors.green,
+                          onTap: () {
+                            setState(() {
+                              colors = Colors.green;
+                            });
+                          }),
+                      _colorPalette(
+                          color: Colors.blue,
+                          onTap: () {
+                            setState(() {
+                              colors = Colors.blue;
+                            });
+                          }),
+                      _colorPalette(
+                          color: Colors.purpleAccent,
+                          onTap: () {
+                            setState(() {
+                              colors = Colors.purpleAccent;
+                            });
+                          }),
+                      _colorPalette(
+                          color: Colors.orange,
+                          onTap: () {
+                            setState(() {
+                              colors = Colors.orange;
+                            });
+                          }),
+                    ],
                   ),
                 ),
-               const SizedBox(height: 20,),
-               SizedBox(
-                 width: MediaQuery.of(context).size.width,
-                 child: Row(
-                   mainAxisAlignment: MainAxisAlignment.center,
-                   mainAxisSize: MainAxisSize.max,
-                   children: [
-                     _colorPalette(
-                       color: Colors.red,
-                       onTap: (){
-                         setState(() {
-                           colors = Colors.red;
-                         });
-                       }
-                     ),
-                     _colorPalette(
-                         color: Colors.green,
-                         onTap: (){
-                           setState(() {
-                             colors = Colors.green;
-                           });
-                         }
-                     ),
-                     _colorPalette(
-                         color: Colors.blue,
-                         onTap: (){
-                           setState(() {
-                             colors = Colors.blue;
-                           });
-                         }
-                     ),
-                     _colorPalette(
-                         color: Colors.purpleAccent,
-                         onTap: (){
-                           setState(() {
-                             colors = Colors.purpleAccent;
-                           });
-                         }
-                     ),
-                     _colorPalette(
-                         color: Colors.orange,
-                         onTap: (){
-                           setState(() {
-                             colors = Colors.orange;
-                           });
-                         }
-                     ),
-                   ],
-                 ),
-               ),
-                const SizedBox(height: 50,),
+                const SizedBox(
+                  height: 50,
+                ),
                 ElevatedButton(
                   onPressed: () {
                     recordWidget();
@@ -177,14 +174,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-        if(_showDialog)
+        if (_showDialog)
           Container(
             color: Colors.black.withOpacity(0.6),
             child: const Center(
               child: SizedBox(
                 height: 30,
                 width: 30,
-                child: CircularProgressIndicator(color: Colors.red,),
+                child: CircularProgressIndicator(
+                  color: Colors.red,
+                ),
               ),
             ),
           )
@@ -192,10 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
- Widget _colorPalette({
-    required Function() onTap,
-    required Color color
-}){
+  Widget _colorPalette({required Function() onTap, required Color color}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
@@ -210,5 +206,5 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
-}
+  }
 }
