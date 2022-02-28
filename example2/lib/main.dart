@@ -121,8 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: AnimatedTextKit(
                         repeatForever: true,
                         animatedTexts: [
-                          TyperAnimatedText('aaaaaa',
-                              speed: const Duration(milliseconds: 300))
+                          TyperAnimatedText('Gif Demo.',
+                              speed: const Duration(milliseconds: 300,
+                              ))
                         ],
                       ),
                     ),

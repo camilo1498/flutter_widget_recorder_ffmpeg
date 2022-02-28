@@ -1,7 +1,7 @@
 name: flutter_screen_recorder_ffmpeg
-description: A new Flutter project.
-version: 0.0.1
-homepage:
+description: This is an experimental package that provides a simple way to render widget to video/gif using ffmpeg (it is not the best way but by the moment is the best method)
+version: 0.0.4
+homepage: https://github.com/camilo1498/flutter_widget_recorder_ffmpeg
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
