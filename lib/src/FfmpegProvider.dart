@@ -17,7 +17,7 @@ class FfmpegProvider with ChangeNotifier {
     if (await Permission.storage.request().isGranted) {
       /// mp4 output
       String mp4Command =
-          '-r 50 -i ${Constants.imagesPath} -vf scale=1920:1080 -y ${Constants.videoOutputPath}';
+          '-r 50 -i ${Constants.imagesPath} -vf scale=1920:1080 -pix_fmt yuv420p -y ${Constants.videoOutputPath}';
 
       /// 7mb gif output
       String gifCommand =

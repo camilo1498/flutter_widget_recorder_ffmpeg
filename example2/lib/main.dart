@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             timer.cancel();
           });
-          var path = await controller.export(renderType: RenderType.video);
+          var path = await controller.export(renderType: RenderType.gif);
           if(path['success'] == true){
             setState((){
               outPath = path['outPath'];
