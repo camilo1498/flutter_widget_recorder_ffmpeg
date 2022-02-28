@@ -23,7 +23,7 @@ flutter_screen_recorder_ffmpeg:
 
 1) ### Android
 
-add uses-permission in `AndroidManifest.xml` file:
+* Add uses-permission in `AndroidManifest.xml` file:
 ```xml
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -38,9 +38,9 @@ inside the `<application>` section add the following line:
     android:requestLegacyExternalStorage="true"
 ```
 
-2) update kotlin version to `1.6.0` and `classpath 'com.android.tools.build:gradle:7.0.4'` in your `build.gradle`
+* Update kotlin version to `1.6.0` and `classpath 'com.android.tools.build:gradle:7.0.4'` in your `build.gradle`
  
-4) in `android` set the `minSdkVersion` to `25` in your `build.gradle`
+* Set the `minSdkVersion` to `25` in your `build.gradle`
  
    ### ios
 Not tested yet...
