@@ -5,8 +5,8 @@ This is an experimental package that provides a simple way to render widget to v
 ## Demo
 
 <p float="left"> 
-   <img src="https://github.com/camilo1498/stories_editor/blob/main/stories%20editor%20screenshots/demo.gif" alt="showcase gif" title="custom view" width="200"/>
-   <img src="https://github.com/camilo1498/stories_editor/blob/main/stories%20editor%20screenshots/text_animations.gif" alt="showcase gif" title="custom view" width="200"/> 
+   <img src="https://github.com/camilo1498/flutter_widget_recorder_ffmpeg/blob/main/screenshots/gif_demo.gif" alt="showcase gif" title="custom view" width="200"/>
+   <img src="https://github.com/camilo1498/flutter_widget_recorder_ffmpeg/blob/main/screenshots/video_demo.gif" alt="showcase gif" title="custom view" width="200"/> 
 </p>
 
 ## Installation
