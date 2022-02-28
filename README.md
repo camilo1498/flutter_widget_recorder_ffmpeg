@@ -38,7 +38,7 @@ inside the `<application>` section add the following line:
     android:requestLegacyExternalStorage="true"
 ```
    ### ios
-Not testes yet...
+Not tested yet...
 
 ## Example
 
