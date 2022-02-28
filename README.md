@@ -37,6 +37,11 @@ inside the `<application>` section add the following line:
 ```xml
     android:requestLegacyExternalStorage="true"
 ```
+
+2) update kotlin version to `1.6.0` and `classpath 'com.android.tools.build:gradle:7.0.4'` in your `build.gradle`
+ 
+4) in `android` set the `minSdkVersion` to `25` in your `build.gradle`
+ 
    ### ios
 Not tested yet...
 
