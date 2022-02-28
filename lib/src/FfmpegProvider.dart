@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:ffmpeg_kit_flutter_min_gpl/ffmpeg_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screen_recorder_ffmpeg/src/constants.dart';
