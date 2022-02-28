@@ -1,8 +1,8 @@
-class Constants{
+enum RenderType{gif,video}
 
-  static const String BASE_PATH = '/storage/emulated/0/Download/example/';
-  static const String SAVE_BASE_PATH = '/storage/emulated/0/Download/';
-  // /data/user/0/com.example.example2/app_flutter/0.png
-  static const String IMAGES_PATH = BASE_PATH + '%0d.png';
-  static String OUTPUT_PATH = SAVE_BASE_PATH + 'x.gif';
+class Constants{
+  static String basePath = '/data/user/0/com.example.example2/cache/';
+  static String imagesPath = basePath + '%0d.png';
+  static String gifOutputPath = basePath + 'output.gif';
+  static String videoOutputPath = basePath + 'output.mp4';
 }

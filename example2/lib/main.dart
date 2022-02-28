@@ -1,17 +1,19 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:screen_recorder/screen_recorder.dart';
+import 'package:flutter_screen_recorder_ffmpeg/screen_recorder.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,13 +21,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -34,29 +36,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   Color colors = Colors.red;
   ScreenRecorderController controller = ScreenRecorderController();
+  String outPath = '';
+  bool _showDialog = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     Permission.storage.request();
     super.initState();
   }
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
-  Timer? _timer;
-  int _timerStart = 10;
+  late Timer _timer;
+  int _timerStart = 5;
   recordWidget() async {
     controller.start();
     startTimer();
+    setState(() {
+      _showDialog = true;
+    });
   }
   void startTimer() {
+
     Duration oneSec = const Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
@@ -67,7 +68,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
             timer.cancel();
           });
-          await controller.export();
+          String path = await controller.export();
+          setState(() {
+            outPath = path;
+          });
+          await ImageGallerySaver.saveFile(outPath,
+              name: "stories_creator${DateTime.now()}.png").whenComplete(() {
+                setState(() {
+                  _showDialog = false;
+                });
+          });
         } else {
           setState(() {
             _timerStart--;
@@ -79,98 +89,126 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+    return Stack(
+      children: [
+        Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
 
-            ScreenRecorder(
-              height: 200,
-              width: 200,
-              controller: controller,
-              child: Center(
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  color: colors,
+                ScreenRecorder(
+                  controller: controller,
                   child: Center(
-                    child: AnimatedTextKit(
-                      repeatForever: true,
-                      animatedTexts: [
-                        TyperAnimatedText('Hello Manco >:v !', speed: const Duration(milliseconds: 300))
-                      ],
-                    ),
+                    child: AnimatedContainer(
+                      height: 200,
+                      width: 200,
+                      duration: const Duration(milliseconds: 300),
+                      color: colors,
+                      child: Center(
+                        child: AnimatedTextKit(
+                          repeatForever: true,
+                          animatedTexts: [
+                            TyperAnimatedText('aaaaaa', speed: const Duration(milliseconds: 300))
+                          ],
+                        ),
+                      ),
+                    )
                   ),
-                )
-              ),
+                ),
+               const SizedBox(height: 20,),
+               SizedBox(
+                 width: MediaQuery.of(context).size.width,
+                 child: Row(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   mainAxisSize: MainAxisSize.max,
+                   children: [
+                     _colorPalette(
+                       color: Colors.red,
+                       onTap: (){
+                         setState(() {
+                           colors = Colors.red;
+                         });
+                       }
+                     ),
+                     _colorPalette(
+                         color: Colors.green,
+                         onTap: (){
+                           setState(() {
+                             colors = Colors.green;
+                           });
+                         }
+                     ),
+                     _colorPalette(
+                         color: Colors.blue,
+                         onTap: (){
+                           setState(() {
+                             colors = Colors.blue;
+                           });
+                         }
+                     ),
+                     _colorPalette(
+                         color: Colors.purpleAccent,
+                         onTap: (){
+                           setState(() {
+                             colors = Colors.purpleAccent;
+                           });
+                         }
+                     ),
+                     _colorPalette(
+                         color: Colors.orange,
+                         onTap: (){
+                           setState(() {
+                             colors = Colors.orange;
+                           });
+                         }
+                     ),
+                   ],
+                 ),
+               ),
+                const SizedBox(height: 50,),
+                ElevatedButton(
+                  onPressed: () {
+                    recordWidget();
+                  },
+                  child: const Text('Start'),
+                ),
+              ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                recordWidget();
-              },
-              child: Text('Start'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                //ntroller.stop();
-              },
-              child: Text('Stop'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                //List<String> gif = await controller.export();
-                //print(gif);
-                await MergeProvider().mergeIntoVideo();
-              },
-              child: Text('show recoded video'),
-            ),
-            GestureDetector(
-              onTap: (){
-                setState(() {
-                  colors = Colors.red;
-                });
-              },
-              child: Container(
-                color: Colors.red,
-                height: 50,
-                width: 50,
-              ),
-            ),
-            GestureDetector(
-              onTap: (){
-                setState(() {
-                  colors = Colors.green;
-                });
-              },
-              child: Container(
-                color: Colors.green,
-                height: 50,
-                width: 50,
-              ),
-            ),
-            GestureDetector(
-              onTap: (){
-                setState(() {
-                  colors = Colors.blue;
-                });
-              },
-              child: Container(
-                color: Colors.blue,
-                height: 50,
-                width: 50,
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+        if(_showDialog)
+          Container(
+            color: Colors.black.withOpacity(0.6),
+            child: const Center(
+              child: SizedBox(
+                height: 30,
+                width: 30,
+                child: CircularProgressIndicator(color: Colors.red,),
+              ),
+            ),
+          )
+      ],
     );
   }
+
+ Widget _colorPalette({
+    required Function() onTap,
+    required Color color
+}){
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+          height: 40,
+          width: 40,
+        ),
+      ),
+    );
+}
 }
