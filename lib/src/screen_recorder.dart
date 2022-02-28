@@ -91,7 +91,7 @@ class ScreenRecorderController {
   }
 
   /// export widget
-  Future<String> export({required RenderType renderType}) async {
+  Future<Map<String,dynamic>> export({required RenderType renderType}) async {
     String dir;
     String imagePath;
 
@@ -115,7 +115,6 @@ class ScreenRecorderController {
 
       /// create temp path for every frame
       imagePath = '$dir/$i.png';
-
       /// create image frame in the temp directory
       File capturedFile = File(imagePath);
       await capturedFile.writeAsBytes(pngBytes);
@@ -129,11 +128,7 @@ class ScreenRecorderController {
         await FfmpegProvider().mergeIntoVideo(renderType: renderType);
 
     /// return
-    if (response['success'] == true) {
-      return Constants.videoOutputPath;
-    } else {
-      return response['msg'];
-    }
+    return response;
   }
 }
 

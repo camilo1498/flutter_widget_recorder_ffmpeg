@@ -66,17 +66,31 @@ class _MyHomePageState extends State<MyHomePage> {
 
             timer.cancel();
           });
-          String path = await controller.export(renderType: RenderType.video);
-          setState(() {
-            outPath = path;
-          });
-          await ImageGallerySaver.saveFile(outPath,
-                  name: "stories_creator${DateTime.now()}.png")
-              .whenComplete(() {
+          var path = await controller.export(renderType: RenderType.video);
+          if(path['success'] == true){
+            setState((){
+              outPath = path['outPath'];
+            });
+            await ImageGallerySaver.saveFile(outPath,
+                name: "${DateTime.now()}").then((value) {
+
+              if(value['isSuccess'] == true){
+                debugPrint(value['filePath']);
+              } else{
+                debugPrint(value['errorMessage']);
+              }
+            })
+                .whenComplete(() {
+              setState(() {
+                _showDialog = false;
+              });
+            });
+          } else{
             setState(() {
+              outPath = path['msg'];
               _showDialog = false;
             });
-          });
+          }
         } else {
           setState(() {
             _timerStart--;
@@ -170,6 +184,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: const Text('Start'),
                 ),
+                const SizedBox(
+                  height: 50,
+                ),
+                Center(
+                  child: Text(
+                    'Response => $outPath'
+                  ),
+                )
               ],
             ),
           ),

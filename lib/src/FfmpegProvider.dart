@@ -15,7 +15,7 @@ class FfmpegProvider with ChangeNotifier {
     if (await Permission.storage.request().isGranted) {
       /// mp4 output
       String mp4Command =
-          '-r 50 -i ${Constants.imagesPath} -vf scale=-1:720,fps=60 -pix_fmt yuv420p -y ${Constants.videoOutputPath}';
+          '-r 50 -i ${Constants.imagesPath} -vf scale=1920:1080 -y ${Constants.videoOutputPath}';
 
       /// 7mb gif output
       String gifCommand =
@@ -32,7 +32,7 @@ class FfmpegProvider with ChangeNotifier {
         var res = await rc.getReturnCode();
 
         if (res!.getValue() == 0) {
-          return {'success': true, 'msg': 'Widget was render successfully.'};
+          return {'success': true, 'msg': 'Widget was render successfully.', 'outPath':  renderType == RenderType.gif ? Constants.gifOutputPath : Constants.videoOutputPath};
         } else if (res.getValue() == 1) {
           return {'success': false, 'msg': 'Widget was render unsuccessfully.'};
         } else {
